@@ -2,7 +2,12 @@
 description: >-
   eliminación de saltos de líneas - reemplazos -  eliminación de emojis - quita
   de hipervínculos - corrreción de ortografía - quita de caracteres especiales
+cover: .gitbook/assets/Limpieza_imagen.png
+coverY: 0
 layout:
+  cover:
+    visible: true
+    size: hero
   title:
     visible: true
   description:
@@ -21,17 +26,16 @@ La **limpieza de datos** es un factor a considerar debido a que al tratarse de c
 
 ## <mark style="background-color:blue;">**Librerías utilizadas**</mark>
 
-* _<mark style="color:blue;">**pandas:**</mark>_ esta librería fue diseñada para facilitar el análisis y manipulación de datos en forma tabular. Permite cargar datos de diversas fuentes (ej: CSV, Excel, SQL), limpiarlos, filtrar y seleccionar datos, realizar operaciones estadísticas y generar visualizaciones sencillas. Se destaca esta librería por su capacidad de trabajar con grandes volúmenes de datos y su integración con otras librerías de análisis y visualización de datos.
-* _<mark style="color:blue;">**openpyxl:**</mark>_ es una herramienta para trabajar con archivos de Excel en formato .xlsx. Permite leer, escribir y manipular hojas de cálculo.&#x20;
-* _<mark style="color:blue;">**html:**</mark>_ esta librería permite analizar, manipular y generar contenido de HTML.
-* _<mark style="color:blue;">**re:**</mark>_ es utilizada para trabajar con patrones de texto. Permite realizar búsquedas, extracciones y manipulaciones avanzadas de cadenas de texto, lo que resulta útil para las tareas de reemplazo y procesamiento de archivos de texto estructurados.&#x20;
-* _<mark style="color:blue;">**nltk:**</mark>_ por sus siglas en inglés "Natural Language Toolkit"  es una librería muy importante para el procesamiento del lenguaje natural en Python. Proporciona funciones para la tokenización, lematización, análisis sintáctico, entre otras.&#x20;
-* _<mark style="color:blue;">**unidecode:**</mark>_  se utiliza para transliterar cadenas de texto Unicode en ASCII, lo que significa que convierte caracteres Unicode (como las letras con tiles, diéresis, símbolos, o caracteres especiales) a sus equivalentes ASCII más cercanos. Esta librería resulta muy útil para normalizar cadenas de texto.
-* _<mark style="color:blue;">**emoji:**</mark>_ esta librería proporciona herramientas para trabajar específicamente con emojis en Python, como la detección de emojis en cadenas de texto.&#x20;
-* _<mark style="color:blue;">**spellchecker:**</mark>_ permite identificar y corregir errores ortográficos en texto, facilitando la tarea de asegurar la calidad del texto escrito en aplicaciones y procesos de análisis de dat
+* _<mark style="color:blue;">**pandas (versión 2.2.1):**</mark>_ esta librería fue diseñada para facilitar el análisis y manipulación de datos en forma tabular. Permite cargar datos de diversas fuentes (ej: CSV, Excel, SQL), limpiarlos, filtrar y seleccionar datos, realizar operaciones estadísticas y generar visualizaciones sencillas. Se destaca esta librería por su capacidad de trabajar con grandes volúmenes de datos y su integración con otras librerías de análisis y visualización de datos.
+* _<mark style="color:blue;">**openpyxl (versión 3.1.2) :**</mark>_ es una herramienta para trabajar con archivos de Excel en formato .xlsx. Permite leer, escribir y manipular hojas de cálculo.&#x20;
+* _<mark style="color:blue;">**html (versión 3.11.5):**</mark>_ esta librería permite analizar, manipular y generar contenido de HTML.
+* _<mark style="color:blue;">**re (versión 2.2.1):**</mark>_ es utilizada para trabajar con patrones de texto. Permite realizar búsquedas, extracciones y manipulaciones avanzadas de cadenas de texto, lo que resulta útil para las tareas de reemplazo y procesamiento de archivos de texto estructurados.&#x20;
+* _<mark style="color:blue;">**nltk (versión 3.8.1):**</mark>_ por sus siglas en inglés "Natural Language Toolkit"  es una librería muy importante para el procesamiento del lenguaje natural en Python. Proporciona funciones para la tokenización, lematización, análisis sintáctico, entre otras.&#x20;
+* _<mark style="color:blue;">**unidecode (versión 1.3.6):**</mark>_  se utiliza para transliterar cadenas de texto Unicode en ASCII, lo que significa que convierte caracteres Unicode (como las letras con tiles, diéresis, símbolos, o caracteres especiales) a sus equivalentes ASCII más cercanos. Esta librería resulta muy útil para normalizar cadenas de texto.
+* _<mark style="color:blue;">**emoji (versión 1.7.0):**</mark>_ esta librería proporciona herramientas para trabajar específicamente con emojis en Python, como la detección de emojis en cadenas de texto.&#x20;
+* _<mark style="color:blue;">**spellchecker (versión 0.8.1):**</mark>_ permite identificar y corregir errores ortográficos en texto, facilitando la tarea de asegurar la calidad del texto escrito en aplicaciones y procesos de análisis de dat
 
 {% code overflow="wrap" lineNumbers="true" fullWidth="false" %}
-````python
 ```python
 import pandas as pd
 import html
@@ -42,14 +46,13 @@ from unidecode import unidecode
 import emoji
 from spellchecker import SpellChecker
 ```
-````
 {% endcode %}
 
 ## <mark style="background-color:blue;">Importar archivos de excel</mark>
 
 Los archivos de Excel de cada candidato se encuentran en el siguiente zip
 
-{% file src=".gitbook/assets/Datos.zip" %}
+{% file src=".gitbook/assets/Datos_candidatos (1).zip" %}
 
 ```python
 # Definimos la ruta y nombre del archivo
@@ -79,36 +82,34 @@ df5 = pd.read_excel(file_path5)
 
 ## <mark style="background-color:blue;">Limpieza y filtrado de datos</mark>
 
-
-
 ### <mark style="color:blue;">Eliminación de saltos de línea</mark>&#x20;
 
-Se quitan los saltos de línea en los comentarios para eliminar /n
+Se quitan los saltos de línea en los comentarios para eliminar el carácter especial \n
 
 Definimos la función _eliminar\_saltos()_
 
->
+> ```
+> def eliminar_saltos(df):
+> ```
 >
 > ```python
-> def eliminar_saltos(df):
 >     """
 >     Función para eliminar saltos de línea de un DataFrame en la columna 'Texto'.
 >     
->     Parámetro de la función: df (DataFrame).Se espera que contenga una columna 
->     llamada 'Texto'.
->     
+>     Parámetros: df (pd.DataFrame): DataFrame que contiene la columna a procesar.
+>
+>     Retorna: pd.DataFrame: DataFrame con la columna 'Texto' sin saltos de línea
+>
 >     Esta función itera sobre cada fila del DataFrame y reemplaza los saltos de 
->     línea ("\n") en la columna 'Texto' por espacios en blanco. También utiliza 
+>     línea ("\n") en la columna 'Texto' por espacios en blanco. Además, utiliza 
 >     html.unescape para decodificar cualquier entidad HTML en el texto.
 >     """
->     
 >     for index, row in df.iterrows():
 >         if isinstance(row['Texto'], str):  
 >             # Reemplazar saltos de línea por espacios en blanco
 >             x = row['Texto'].replace("\n", " ")  
 >             # Decodificar entidades HTML
->             df.at[index, 'Texto'] = html.unescape(x) 
->             
+>             df.at[index, 'Texto'] = html.unescape(x)
 > ```
 
 
@@ -123,19 +124,27 @@ eliminar_saltos(df4)
 eliminar_saltos(df5)
 ```
 
-### <mark style="color:blue;">Reemplazo de hastags y usuarios de cuentas oficiales</mark>
+### <mark style="color:blue;">Reemplazo de hastags (#) y menciones de usuarios</mark>
 
+Se reemplazan los hashtags más utilizados y que aportan un significado relevante al posible sentimiento del comentario. Los hashtags menos frecuentes o que no aportaban un significado relevante al contexto se eliminan.
 
-
-* _<mark style="color:blue;">Reemplazo de hastags:</mark>_ en esta etapa se reemplazan los hastags más utilizados por frases que hacen alusión al significado de cada hashtag. Este paso se realiza con el fin de retener más información.
-* _<mark style="color:blue;">Reemplazo de menciones a cuentas oficiales:</mark>_ se reemplazan los usuarios de los cuentas oficiales de cada candidato arrobado por su apellido. Este paso asegura que no se elimine información relevante luego en otras etapas de la limpieza de datos.&#x20;
+En cuanto a la menciones de usuarios se dividió el proceso en dos partes, dependiendo si la mención es a una cuenta oficial de alguno de los candidatos presidenciales o a otros usuarios. En los casos donde se menciona la cuenta oficial de alguno de los candidatos , esta mención se reemplaza por el apellido del candidato correspondiente, asegurando así que no se pierda información. Por otra parte, los comentarios que contienen menciones (@) a usuarios que no fueran los candidatos son eliminados del conjunto de datos. Esta decisión se toma para evitar incluir respuestas entre usuarios o comentarios que hicieran referencia principalmente a otros individuos en lugar de los candidatos presidenciales.
 
 Se crea la función reemplazos()
 
-````python
 ```python
 def reemplazos(df, columna='Texto', columna_limpia='Texto_limpio'):
-    # Diccionario de reemplazos para menciones y hashtags específicos
+    """
+    Procesa y limpia el texto en una columna de un DataFrame, reemplazando menciones y hashtags específicos.
+
+    Parámetros: df (pd.DataFrame): DataFrame que contiene la columna a procesar.
+    columna (str): Nombre de la columna que contiene el texto original. Por defecto es 'Texto'.
+    columna_limpia (str): Nombre de la nueva columna donde se almacenará el texto limpio. Por defecto es 'Texto_limpio'.
+
+    Retorna: pd.DataFrame: DataFrame con una nueva columna que contiene el texto procesado, y elimina filas donde el texto procesado es None o está vacío.
+    """
+    
+    # Diccionario de reemplazos para menciones y hashtags
     reemplazos_dict = {
         '@Jmilei': 'Milei',
         '@myriambregman': 'Bregman',
@@ -191,11 +200,22 @@ def reemplazos(df, columna='Texto', columna_limpia='Texto_limpio'):
     }
     
     def procesar_texto(texto):
+        """
+        Limpia el texto aplicando los reemplazos definidos.
+
+        Parámetros:
+        texto (str): Texto a procesar.
+
+        Retorna:
+        str o None: Texto limpio o None si no se puede procesar.
+        """
+        
         if not isinstance(texto, str):
             return None
         
         texto_limpio = texto.lower()  # Convertir a minúsculas
         
+        # Reemplazar menciones y hashtags
         for patron, reemplazo in reemplazos_dict.items():
             texto_limpio = re.sub(re.escape(patron), reemplazo, texto_limpio, flags=re.IGNORECASE)
         
@@ -203,22 +223,20 @@ def reemplazos(df, columna='Texto', columna_limpia='Texto_limpio'):
         if re.search(r'@\w+|#\w+', texto_limpio):
             return None
         
-        return texto_limpio if texto_limpio.strip() else None
+        return texto_limpio.strip() if texto_limpio.strip() else None #stip se utiliza para eliminar cualquier espacio blanco y al final de la cadena. Asegura que no haya espacios innecesarios
     
     # Crear nueva columna con el texto procesado
     df[columna_limpia] = df[columna].apply(procesar_texto)
     
     # Eliminar filas donde el texto procesado es None o está vacío
     df = df.dropna(subset=[columna_limpia])
-    df = df[df[columna_limpia].str.strip() != '']
+    df = df[df[columna_limpia].str.strip() != ''] 
     
     return df
 ```
-````
 
 Aplicamos la función reemplazos() a los dataframe de cada candidato
 
-````python
 ```python
 df1 = reemplazos(df1)
 df2 = reemplazos(df2)
@@ -226,13 +244,13 @@ df3 = reemplazos(df3)
 df4 = reemplazos(df4)
 df5 = reemplazos(df5)
 ```
-````
 
 ### <mark style="color:blue;">Eliminación de registros con hipervínculos</mark>
 
-Se eliminan aquellos registros que contengan hipervínculos ya que la presencia de un enlace es un fuerte indicador que podría tratarse de un comentario que dirige hacia una noticia. En este caso, este tipo de comentarios no expresa ningún tipo de juicio de valor, por lo que eliminan.
+Se eliminan aquellos registros que contengan hipervínculos ya que la presencia de un enlace es un fuerte indicador de que el comentario podría dirigir hacia una página web que amplía como noticia lo mostrado en la publicación original. Este tipo de comentarios no expresan ningún tipo de juicio de valor, por lo que se eliminan.
 
-````python
+Se crea la función quitar\_enlaces()
+
 ```python
 def quitar_enlaces(df, columna='Texto_limpio'):
     """
@@ -281,9 +299,7 @@ def quitar_enlaces(df, columna='Texto_limpio'):
 
     return df
 ```
-````
 
-````python
 ```python
 df1 = quitar_enlaces(df1)
 df2 = quitar_enlaces(df2)
@@ -291,7 +307,6 @@ df3 = quitar_enlaces(df3)
 df4 = quitar_enlaces(df4)
 df5 = quitar_enlaces(df5)
 ```
-````
 
 ### <mark style="color:blue;">Quitar caracteres especiales</mark>
 
@@ -299,14 +314,13 @@ Se eliminan caracteres como los signos de puntuación, numerales, astericos, ya 
 
 Se define la función quitar\_caracteres()
 
-````python
 ```python
 def quitar_caracteres(df):
     """
     Función para limpiar un DataFrame eliminando caracteres especiales, no alfanuméricos y hashtags en el texto.
 
     Parámetros:
-    - df: DataFrame de pandas. Se espera que contenga una columna llamada 'Texto'.
+    - df: DataFrame de pandas. Se espera que contenga una columna llamada 'Texto_limpio'.
 
     La función itera sobre cada fila del DataFrame y elimina caracteres especiales, no alfanuméricos y hashtags
     en el texto, manteniendo solo caracteres alfanuméricos y espacios.
@@ -327,11 +341,9 @@ def quitar_caracteres(df):
 
     return df
 ```
-````
 
 Aplicamos la función quitar\_caracteres() a los dataframe de cada candidato
 
-````python
 ```python
 df1 = quitar_caracteres(df1)
 df2 = quitar_caracteres(df2)
@@ -339,7 +351,6 @@ df3 = quitar_caracteres(df3)
 df4 = quitar_caracteres(df4)
 df5 = quitar_caracteres(df5)
 ```
-````
 
 ### <mark style="color:blue;">Eliminación de emojis</mark>
 
@@ -350,83 +361,107 @@ Se define la función eliminar\_emojis()
 ```python
 def eliminar_emojis(texto):
     """
-    Función para eliminar emojis de un texto.
-    
-    Parámetro de la función: texto, cadena de texto que puede contener emojis.
+    Elimina todos los emojis de un texto dado.
 
-    La función retorna texto sin emojis.
+    Esta función utiliza una expresión regular para identificar y eliminar 
+    todos los emojis presentes en la cadena de texto proporcionada. Es útil 
+    para limpiar textos que pueden contener caracteres no deseados, como 
+    emojis, antes de realizar análisis de texto o procesamiento adicional.
+
+    Parámetros:
+    - texto : str (La cadena de texto de la cual se desean eliminar los emojis)
+
+    Retorna:
+    -str (Una nueva cadena de texto sin emojis)
     """
     return emoji.get_emoji_regexp().sub(r'', texto)
 ```
 
 Se aplica la función eliminar\_emojis() a la columna "Texto" de cada dataframe&#x20;
 
-````python
 ```python
 df1['Texto_limpio'] = df1['Texto_limpio'].apply(eliminar_emojis)
 df2['Texto_limpio'] = df2['Texto_limpio'].apply(eliminar_emojis)
 df3['Texto_limpio'] = df3['Texto_limpio'].apply(eliminar_emojis)
 df4['Texto_limpio'] = df4['Texto_limpio'].apply(eliminar_emojis)
 df5['Texto_limpio'] = df5['Texto_limpio'].apply(eliminar_emojis)
-
 ```
-````
-
-### <mark style="color:blue;">Conversión de texto a minúscula</mark>
-
-Este proceso reduce la dimensionalidad, estandarizando las palabras para evitar duplicidades innecesarias.
-
-La función str.lower() es método integrado en Python que se utiliza para convertir una cadena de texto a minúsculas. Se aplica dicha función en la columna "Texto" de cada dataframe.
-
-````
-```python
-df1['Texto_limpio'] = df1['Texto_limpio'].str.lower()
-df2['Texto_limpio'] = df2['Texto_limpio'].str.lower()
-df3['Texto_limpio'] = df3['Texto_limpio'].str.lower()
-df4['Texto_limpio'] = df4['Texto_limpio'].str.lower()
-df5['Texto_limpio'] = df5['Texto_limpio'].str.lower()
-```
-````
 
 ### <mark style="color:blue;">Correción de errores de ortografía</mark>
 
-Al tratarse de comentarios de redes sociales y no texto técnico, los comentarios contienen muchos errores de ortografía que resultan en un aumento de dimensionalidad. Para evitar esto se realiza una limpieza de errores mediante la librería de Python pyspellchecker que utiliza el algoritmo de la distancia de Levenshtein para encondtrar variaciones de una palabra en 2 ediciones desde la palabra original para luego reemplazarlas.&#x20;
+Al tratarse de comentarios de redes sociales y no texto técnico, los comentarios contienen muchos errores de ortografía que resultan en un aumento de dimensionalidad. Las herramientas estándar de corrección ortográfica, como la librería de Python pyspellchecker, suelen basarse en diccionarios generales del español que no contemplan las particularidades del castellano argentino ni los nombres propios relevantes para este estudio.
 
-Si bien esta librería admite el idioma español, es necesario realizar una actualización del diccionario para incoporar palabras utilizadas en Argentina y también nombres propios mencionados en los comentarios
+Para abordar estos retos, se implementó un proceso de dos etapas:
 
-````python
+* Inicialmente, se enriqueció el diccionario de pyspellchecker con términos específicos del contexto argentino y nombres propios frecuentes utilizados en el debate presidencial. Luego se aplicó la corrección ortográfica utilizando este nuevo diccionario personalizado.
+* La limpieza de errores ortográficos mediante esta librería se basa en algoritmo de distancia de Levenshtein, proceso que comienza comparando cada palabra del texto con las entradas del diccionario incorporado. Cuando se detecta una palabra que no está en diccionario, se calcula la distancia de Levenshtein entre esta palabra y las del diccionario y el algoritmo sugiere como corrección la palabra con menor distancia.
+
+```python
 # Indicamos con language='es' que el idioma utilizado es el español
-```python
 spellchecker = SpellChecker(language='es')
-```
-````
 
-````python
-# Agregar nuevas palabras al diccionario
+```
+
 ```python
-nuevas_palabras = ['campora','vllc','bullrich','cavallo','prefiero','vamosnos','conozco','quisiera','venis','factos','charlatan','bla','zarasa','CFK','bregman','javier','gatito','eeuu','mirtha','fatima','schiaretti','jxc','bcra','voucher','clarin','fogonear','massita','dolarizar','rodrigazo','doparon','nazi','polarizacion','wacho','dolarizacion','pb','mb','messi', 'neoliberal','libertario', 'espert', 'donando', 'tribunera','tribuna', 'baradel', 'piola', 'memes','fafafa', 'ñoquis', 'cachivache', 'punteros', 'alberto','fernandez', 'slogan', 'chavez', 'rusa', 'zelinski', 'votemos', 'pedo', 'berreta', 'paseo', 'dubai', 'tucuman', 'porteños','bs','as', 'amba', 'cba', 'biden', 'falluto', 'batakis', 'petri', 'evita','mamarracho','hdmp', 'guzman', 'presidente', 'existe','planes', 'siendo','querer','cambio','cambiar', 'estuviste','cátedra',
-                   'Eunerkian','vota','iphone','osde','voto','miryam','miriam','mirian','carajo','pelotudo','che','javo','oligarcas','recoleta','viale','barrabravas','feimann','motosierra','bananero','negativo','mate','garca', 'vino','narcotrafico','fundidos','reprimir','represion','lcdtm','fundir','pbi','rua','mamarracho','desquiciado','medicado','puede','humanizo','agustin','descoloco','descerebrados','chaborra','chupi','tomada','milei','borracha','montonera','barrionuevo','kirchnerismo','kicillof','bolsonaro','macri','macrismo','menem','menemismo','menemista','cambiemos','pro','trump','chanta','videla','tiktok','conviene','lla','shipeo','mword','bolas', 'chaco','jujuy','wakanda','sota', 'cararrota', 'nono', 'choreo','chorean', 'aguante', 'adoctrinamiento', 'uxp', 'che', 'narco','cancelado','massarasa', 'amba', 'esta', 'perdio', 'fmi',
-                   'balotage','patri','siguen','chanta','eduque','pido', 'bendiga','récord','llego','mileli','ojala','hubieron', 'ex','siente','cínica','dio','panqueque','iba','chau','leliq','genia','dubai','perdiste','hubiera','veces','tengo','hablaba','crack','voten','robaste','juancito','pudo','mentiste','docentes','pibe','dale','crei','randazzo','bregman','negacionista','papelon','socialistas','UCR','facha','canchero','lta','liqui','troll','nazi','marra','massera','videla','sobrador','fachos','espert','corralito','porteño','molotov','negacionismo','patito','enserio','larreta','justicialismo','peron','empinar','malbec','libertarios','patagonia','grindetti','villaruel','tiene','piparo','fantino','melconian','piquete','queme','xq','kici','tachando','quiero','drogadicto','piqueteros','boludo','cgt','moyano','massa','pullaro','kirchner','hubo','esta', 'like', 'zurdita', 'Bonafini','mudarme','ladri','ucr', 'tribunero', 'doña', 'empobrecer','empobrecimiento', 'jeta','ventajita','cordobeza', 'zombie', 'manotazo', 'alberto', 'baradel','pandemia','pami', 'lcdtm',
-                   'kirchneristas','kirchnerismo','peron','seremos','millones','chauuu','tomatela','tenemos','axel','sabemos','ñoqui','queremos','unicas','labura','laburar','fueron','lacra','comoda','clarisima','zarasa','melco','falacias','pinocho','cagador','peronismo','afjp','jeje','chupi','humille','meados','meada','boludito','boludita','tenes','tenés','jajaja','carajos','estamos','estan','rivotril','facebook','tinelli','directo','vamos','será','instagram','trosky','va','novaresio','martinez','hoz','bukele','terraplanista','dopar','dopado','presi','trosko','einstein','bue','crack','clona','petaca','transa','moyano','populista','90','30000','2023','30','3','vaga','ole', 'genocidio','socialista', 'cabida','chicana', 'conventillo','merquero','marbella','dope','invotable', 'groso','comunismo', 'paros', 'zurdita', 'culiao', 'yendo', 'podes',
-                   'myriam','malvinas','margaret','a','podría','tarado','bla','ubicando','prosti','sra','parripollo','Rigau','tarada','tarados','mamita','cris','salen','labura','laburador','chances','laburadora','tatcher','cinico','progre','gringo','boluda','dijera','explayo','pelotuda','bondi','comodin','fulero','rossi','dopar','platita','currar','dopado','ogt','hicieron','destruido','caradura','gps','escabio','cachivache','sarmiento','atorrante','fulmino','transa','perdiste','dijo','estuvo','malandra','maldonado','insauralde','córdoba','matanza','gil','infobae','villero','ensobrado','chanta','hacemos','melco','peronistas','hizo','jaja','carita','basado','sergio','tomas','diria','chamuyero','chamuyo','chamuyar','abortera','pedorro','zanganos','chusmerio','iphone','kukas','caradura','llaryora','sorete','interventor','lavagna','pinocho']
+# Agregar nuevas palabras al diccionario
+nuevas_palabras = ['campora','vllc','bullrich','cavallo','prefiero','vamosnos','conozco','quisiera','venis','factos','charlatan','bla','zarasa','CFK','bregman',
+                   'javier','gatito','eeuu','mirtha','fatima','schiaretti','jxc','bcra','voucher','clarin','fogonear','massita','dolarizar','rodrigazo','doparon',
+                   'nazi','polarizacion','wacho','dolarizacion','pb','mb','messi', 'neoliberal','libertario', 'espert', 'donando', 'tribunera','tribuna', 'baradel', 
+                   'piola', 'memes','fafafa', 'ñoquis', 'cachivache', 'punteros', 'alberto','fernandez', 'slogan', 'chavez', 'rusa', 'zelinski', 'votemos', 'pedo', 
+                   'berreta', 'paseo', 'dubai', 'tucuman', 'porteños','bs','as', 'amba', 'cba', 'biden', 'falluto', 'batakis', 'petri', 'evita','mamarracho','hdmp',
+                   'guzman', 'presidente', 'existe','planes', 'siendo','querer','cambio','cambiar', 'estuviste','cátedra','Eunerkian','vota','iphone','osde','voto',
+                   'miryam','miriam','mirian','carajo','pelotudo','che','javo','oligarcas','recoleta','viale','barrabravas','feimann','motosierra','bananero','negativo',
+                   'mate','garca', 'vino','narcotrafico','fundidos','reprimir','represion','lcdtm','fundir','pbi','rua','mamarracho','desquiciado','medicado','puede',
+                   'humanizo','agustin','descoloco','descerebrados','chaborra','chupi','tomada','milei','borracha','montonera','barrionuevo','kirchnerismo','kicillof',
+                   'bolsonaro','macri','macrismo','menem','menemismo','menemista','cambiemos','pro','trump','chanta','videla','tiktok','conviene','lla','shipeo','mword',
+                   'bolas', 'chaco','jujuy','wakanda','sota', 'cararrota', 'nono', 'choreo','chorean', 'aguante', 'adoctrinamiento', 'uxp', 'che', 'narco','cancelado',
+                   'massarasa', 'amba', 'esta', 'perdio', 'fmi', 'balotage','patri','siguen','chanta','eduque','pido', 'bendiga','récord','llego','mileli','ojala',
+                   'hubieron', 'ex','siente','cínica','dio','panqueque','iba','chau','leliq','genia','dubai','perdiste','hubiera','veces','tengo','hablaba','crack',
+                   'voten','robaste','juancito','pudo','mentiste','docentes','pibe','dale','crei','randazzo','bregman','negacionista','papelon','socialistas','UCR',
+                   'facha','canchero','lta','liqui','troll','nazi','marra','massera','videla','sobrador','fachos','espert','corralito','porteño','molotov','negacionismo',
+                   'patito','enserio','larreta','justicialismo','peron','empinar','malbec','libertarios','patagonia','grindetti','villaruel','tiene','piparo','fantino',
+                   'melconian','piquete','queme','xq','kici','tachando','quiero','drogadicto','piqueteros','boludo','cgt','moyano','massa','pullaro','kirchner','hubo',
+                   'esta', 'like', 'zurdita', 'Bonafini','mudarme','ladri','ucr', 'tribunero', 'doña', 'empobrecer','empobrecimiento', 'jeta','ventajita','cordobeza',
+                   'zombie', 'manotazo', 'alberto', 'baradel','pandemia','pami', 'lcdtm','kirchneristas','kirchnerismo','peron','seremos','millones','chauuu','tomatela',
+                   'tenemos','axel','sabemos','ñoqui','queremos','unicas','labura','laburar','fueron','lacra','comoda','clarisima','zarasa','melco','falacias','pinocho',
+                   'cagador','peronismo','afjp','jeje','chupi','humille','meados','meada','boludito','boludita','tenes','tenés','jajaja','carajos','estamos','estan',
+                   'rivotril','facebook','tinelli','directo','vamos','será','instagram','trosky','va','novaresio','martinez','hoz','bukele','terraplanista','dopar',
+                   'dopado','presi','trosko','einstein','bue','crack','clona','petaca','transa','moyano','populista','90','30000','2023','30','3','vaga','ole', 'genocidio',
+                   'socialista', 'cabida','chicana', 'conventillo','merquero','marbella','dope','invotable', 'groso','comunismo', 'paros', 'zurdita', 'culiao', 'yendo', 
+                   'podes','myriam','malvinas','margaret','a','podría','tarado','bla','ubicando','prosti','sra','parripollo','Rigau','tarada','tarados','mamita',
+                   'cris','salen','labura','laburador','chances','laburadora','tatcher','cinico','progre','gringo','boluda','dijera','explayo','pelotuda','bondi',
+                   'comodin','fulero','rossi','dopar','platita','currar','dopado','ogt','hicieron','destruido','caradura','gps','escabio','cachivache','sarmiento',
+                   'atorrante','fulmino','transa','perdiste','dijo','estuvo','malandra','maldonado','insauralde','córdoba','matanza','gil','infobae','villero',
+                   'ensobrado','chanta','hacemos','melco','peronistas','hizo','jaja','carita','basado','sergio','tomas','diria','chamuyero','chamuyo','chamuyar',
+                   'abortera','pedorro','zanganos','chusmerio','iphone','kukas','caradura','llaryora','sorete','interventor','lavagna','pinocho']
+
 
 ```
-````
 
-````python
 ```python
 # Agregar las nuevas palabras al diccionario de una sola vez
 spellchecker.word_frequency.load_words(nuevas_palabras)
 ```
-````
 
-````python
-# Función para realizar el spellcheck en una fila
-```python
-def spellcheck_text(texto):
+Se definen las funciones `spellcheck_text` y `clean_and_apply_spellcheck`para corregir la ortografía de textos en un DataFrame de pandas. La función `spellcheck_text` toma un texto como entrada, verifica si las palabras están en una lista de palabras aceptadas y utiliza un corrector ortográfico para sugerir correcciones cuando es necesario. Mantiene sin cambios las palabras nulas, vacías o no alfabéticas. Por otro lado, `clean_and_apply_spellcheck` se encarga de limpiar el DataFrame eliminando filas con valores nulos o vacíos en la columna 'Texto\_limpio' y aplica la función de corrección ortográfica a cada entrada, almacenando los resultados en una nueva columna llamada 'Texto\_corregido'.\
+
+
+<pre class="language-python"><code class="lang-python">def spellcheck_text(texto):
     """
-    Función para corregir la ortografía de un texto.
+    Corrige la ortografía de un texto dado.
+
+    Esta función toma un texto como entrada y corrige las palabras que no están en 
+    la lista de palabras aceptadas (`nuevas_palabras`). Si una palabra no se encuentra 
+    en la lista, se utiliza un corrector ortográfico para sugerir una corrección. 
+    Las palabras que son nulas, vacías o que no son alfabéticas se mantienen sin cambios.
+
+    Parámetros:
+    -texto : str (El texto a corregir)
+
+    Retorna:
+    str (El texto corregido)
     """
+
     if pd.isna(texto) or texto == '':
         return ''  # Devolver string vacío para valores nulos o vacíos
     if not isinstance(texto, str):
@@ -434,6 +469,7 @@ def spellcheck_text(texto):
     
     palabras = texto.split()
     palabras_corregidas = []
+    
     for palabra in palabras:
         if palabra.lower() in nuevas_palabras or not palabra.isalpha():
             palabras_corregidas.append(palabra)
@@ -443,12 +479,27 @@ def spellcheck_text(texto):
                 palabras_corregidas.append(palabra_corregida)
             else:
                 palabras_corregidas.append(palabra)  # Mantener la palabra original si no hay corrección
+                
     return ' '.join(palabras_corregidas)
+
 
 def clean_and_apply_spellcheck(df):
     """
-    Limpia el DataFrame y aplica la corrección ortográfica.
-    """
+    Limpia el DataFrame y aplica la corrección ortográfica a la columna 'Texto_limpio'.
+
+    Esta función verifica si la columna 'Texto_limpio' existe en el DataFrame. Si existe, 
+    elimina las filas con valores nulos o vacíos en esa columna y luego aplica la función 
+    `spellcheck_text` a cada entrada de la columna para corregir su ortografía. Los resultados 
+    se almacenan en una nueva columna llamada 'Texto_corregido'.
+
+    Parámetros:
+    -df : pandas.DataFrame (contiene la columna 'Texto_limpio' que se desea limpiar y corregir)
+
+    Retorna:
+    -pandas.DataFrame (DataFrame original con una nueva columna 'Texto_corregido')
+    
+<strong>    """
+</strong>
     if 'Texto_limpio' not in df.columns:
         print("La columna 'Texto_limpio' no existe en el DataFrame.")
         return df
@@ -459,15 +510,14 @@ def clean_and_apply_spellcheck(df):
     
     # Aplicar la corrección ortográfica
     df['Texto_corregido'] = df['Texto_limpio'].apply(spellcheck_text)
+    
     return df
-```
+</code></pre>
+
+Aplicamos la función clean\_and\_apply\_spellcheck() a los dataframe de cada candidato
+
 ````
-
-Se aplica la función spellcheck\_row() a la columna "Texto" de cada dataframe&#x20;
-
-````python
-```python
-# Lista de DataFrames a procesar
+# lista de dataframes a los que vamos a aplicar la función  clean_and_apply_spellcheck
 dataframes = [df1, df2, df3, df4, df5]
 
 # Aplicar la limpieza y corrección ortográfica a cada DataFrame
@@ -488,49 +538,37 @@ df1, df2, df3, df4, df5 = dataframes
 ````
 
 {% hint style="warning" %}
-La aplicación de la función spellcheck\_row puede llevar más tiempo que otras funciones aplicadas previamente debido a que debe evaluar múltiples palabras y muchas filas.
+La aplicación de estas dos funciones puede llevar más tiempo que otras funciones aplicadas previamente debido a que debe evaluar múltiples palabras y muchas filas.
 {% endhint %}
-
-### <mark style="color:blue;">Eliminación de registros vacíos</mark>
-
-Después de completar los pasos anteriores, es crucial eliminar los registros vacíos que podrían haber quedado como resultado de este proceso.
-
-```python
-# Eliminar registros vacíos en la columna 'Texto_corregido'
-df1.dropna(subset=['Texto_corregido'], inplace=True)
-df2.dropna(subset=['Texto_corregido'], inplace=True)
-df3.dropna(subset=['Texto_corregido'], inplace=True)
-df4.dropna(subset=['Texto_corregido'], inplace=True)
-df5.dropna(subset=['Texto_corregido'], inplace=True)ode
-```
-
-```python
-# Restablecer índices después de eliminar filas
-df1.reset_index(drop=True, inplace=True)
-df2.reset_index(drop=True, inplace=True)
-df3.reset_index(drop=True, inplace=True)
-df4.reset_index(drop=True, inplace=True)
-df5.reset_index(drop=True, inplace=True)
-```
 
 ### <mark style="color:blue;">Diccionario de palabras</mark>
 
-En este apartado se busca agupar palabras en un único término, con el fin de reducir la dimensionalidad.
+Se utiliza un diccionario de reemplazos para corregir automáticamente palabras y frases que pueden estar mal escritas o son abreviaciones, transformándolas en sus formas correctas y aceptadas. Sin embargo, es importante destacar que solo se corrigen aquellas instancias donde los nombres propios están mal escritos; las referencias correctas a la misma persona se mantienen intactas.\
+\
+Se define la función reemplazar\_palabras()
 
-````python
 ```python
 def reemplazar_palabras(texto):
     """
     Función para reemplazar palabras específicas en el texto.
+
+    Parámetros:
+    -texto : str (donde se realizarán los reemplazos)
+
+    Retorna:
+    -str (El texto con las palabras reemplazadas según el diccionario definido)
     """
+
+    # Verifica si el texto es nulo o no es una cadena, y devuelve el valor original si es así.
     if pd.isna(texto) or not isinstance(texto, str):
         return texto
 
-    # Diccionario de reemplazos
+    # Diccionario de reemplazos donde las claves son tuplas de variantes a ser reemplazadas
+    # y los valores son las palabras o frases por las que se reemplazarán.
     reemplazos = {
-        ('miloski','mileli','miley'): 'milei',
-        ('masa','masita'): 'massa',
-        ('myriam','miria', 'miram','miryam','mirian','mb'): 'bregman',
+        ('miloski', 'mileli', 'miley'): 'milei',
+        ('masa', 'masita'): 'massa',
+        ('myriam', 'miria', 'miram', 'miryam', 'mirian', 'mb'): 'bregman',
         ('3'): 'tres',
         ('vllc'): 'viva la libertad carajo',
         ('30',): 'treinta',
@@ -539,18 +577,22 @@ def reemplazar_palabras(texto):
         ('eeuu'): 'estados unidos',
     }
 
+    # Itera sobre cada grupo de variantes y su correspondiente reemplazo.
     for variantes, reemplazo in reemplazos.items():
+        # Crea un patrón de expresión regular que coincide con cualquiera de las variantes.
         patron = r'\b(' + '|'.join(re.escape(v) for v in variantes) + r')\b'
+        
+        # Reemplaza las variantes encontradas en el texto con el término estándar.
         texto = re.sub(patron, reemplazo, texto, flags=re.IGNORECASE)
 
     return texto
-
 ```
 
-````
+```
+Aplicamos la función reemplazar_palabras para los dataframes de cada candidato
+```
 
 ````python
-```python
 df1['Texto_limpio'] = df1['Texto_limpio'].apply(reemplazar_palabras)
 df2['Texto_limpio'] = df2['Texto_limpio'].apply(reemplazar_palabras)
 df3['Texto_limpio'] = df3['Texto_limpio'].apply(reemplazar_palabras)
@@ -559,9 +601,10 @@ df5['Texto_limpio'] = df5['Texto_limpio'].apply(reemplazar_palabras)
 ```
 ````
 
-### <mark style="color:blue;">Eliminar registros vacíos</mark>
+### <mark style="color:blue;">Eliminar finalmente los registros vacíos</mark>
 
-````python
+Después de la limpieza de datos realizada algunos registros pueden resultar en registros vacíos, los mismos de eliminan ya que no podrán ser procesados en los modelos posteriores.
+
 ```python
 dataframes = [df1, df2, df3, df4, df5]
 
@@ -570,7 +613,6 @@ for i, df in enumerate(dataframes, 1):
     globals()[f'df{i}'] = df_cleaned
     print(f"Registros en df{i} antes: {len(df)}, después: {len(df_cleaned)}")
 ```
-````
 
 ### <mark style="color:blue;">Guardar archivos</mark>&#x20;
 
@@ -592,4 +634,4 @@ df5.to_excel(excel_file5, index=False)
 
 A continuación se adjuntan dichos archivos
 
-{% file src=".gitbook/assets/Datos_limpios.zip" %}
+{% file src=".gitbook/assets/Datos_limpios_candidatos.zip" %}
