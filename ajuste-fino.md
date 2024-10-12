@@ -10,11 +10,7 @@ Se utiliza el conjunto de datos de entrenamiento (_training dataset_) y el conju
 
 ### <mark style="background-color:blue;">Librerías utilizadas</mark>
 
-* _<mark style="color:blue;">**pandas:**</mark>_ esta librería fue diseñada para facilitar el análisis y manipulación de datos en forma tabular. Permite cargar datos de diversas fuentes (ej: CSV, Excel, SQL), limpiarlos, filtrar y seleccionar datos, realizar operaciones estadísticas y generar visualizaciones sencillas. Se destaca esta librería por su capacidad de trabajar con grandes volúmenes de datos y su integración con otras librerías de análisis y visualización de datos.
-* _<mark style="color:blue;">**scklearn.model\_selection:**</mark>_ es parte de una biblioteca muy popular en python Scikit-learn de aprendizaje automático. Esta librería en particular proporciona funciones y clases para realizar operaciones realcionadas con la selección de modelos
-* _<mark style="color:blue;">**transformers:**</mark>_ esta biblioteca pertenece a Hugging Face y es principalmente utilizada para trabajar con modelos de lenguaje pre-entrenados y tareas de NLP.  Dentro de esta biblioteca utilizaremos las clases : XLMRobertaForSequenceClassification, XLMRobertaTokenizer, AutoTokenizer,AutoModelForSequenceClassification, TrainingArguments y Trainer. Las mismas permiten utilizar los modelos importados, tokenizar acorde lo requieran los modelos elegidos y posibilitar el entrenamiento a partir de dichos modelos.
-* _<mark style="color:blue;">**torch:**</mark>_ esta libería hace referencia a Pytorch, una biblioteca de aprendizaje profundo desarrollada principalmente por Meta AI y actualmente pertenece a Linux Foundation. Es reconocida por contener una de las principales librerías utilizadas para tareas de Machine Learning: TensorFlow. Esta librería permite realizar operaciones con tensores (arreglos multidimensionales parecidos a matrices), crear modelos, grafos computacionales, proporcionar herramientas y APIs para el despliegue de modelos en entornos de producción, entre otras tareas.
-* torch.utils.data: permite personalizar y gestionar conjunto de datos que serán utilizados durante el entrenamiento, validación y evaluación de modelos. La clase 'Dataset' proporciona una abstracción de datos que permite acceder a los elementos individuales de un conjunto de datos de manera eficiente.
+*
 
 ```python
 import pandas as pd

@@ -26,15 +26,6 @@ La **limpieza de datos** es un factor a considerar debido a que al tratarse de c
 
 ## <mark style="background-color:blue;">**Librerías utilizadas**</mark>
 
-* _<mark style="color:blue;">**pandas (versión 2.2.1):**</mark>_ esta librería fue diseñada para facilitar el análisis y manipulación de datos en forma tabular. Permite cargar datos de diversas fuentes (ej: CSV, Excel, SQL), limpiarlos, filtrar y seleccionar datos, realizar operaciones estadísticas y generar visualizaciones sencillas. Se destaca esta librería por su capacidad de trabajar con grandes volúmenes de datos y su integración con otras librerías de análisis y visualización de datos.
-* _<mark style="color:blue;">**openpyxl (versión 3.1.2) :**</mark>_ es una herramienta para trabajar con archivos de Excel en formato .xlsx. Permite leer, escribir y manipular hojas de cálculo.&#x20;
-* _<mark style="color:blue;">**html (versión 3.11.5):**</mark>_ esta librería permite analizar, manipular y generar contenido de HTML.
-* _<mark style="color:blue;">**re (versión 2.2.1):**</mark>_ es utilizada para trabajar con patrones de texto. Permite realizar búsquedas, extracciones y manipulaciones avanzadas de cadenas de texto, lo que resulta útil para las tareas de reemplazo y procesamiento de archivos de texto estructurados.&#x20;
-* _<mark style="color:blue;">**nltk (versión 3.8.1):**</mark>_ por sus siglas en inglés "Natural Language Toolkit"  es una librería muy importante para el procesamiento del lenguaje natural en Python. Proporciona funciones para la tokenización, lematización, análisis sintáctico, entre otras.&#x20;
-* _<mark style="color:blue;">**unidecode (versión 1.3.6):**</mark>_  se utiliza para transliterar cadenas de texto Unicode en ASCII, lo que significa que convierte caracteres Unicode (como las letras con tiles, diéresis, símbolos, o caracteres especiales) a sus equivalentes ASCII más cercanos. Esta librería resulta muy útil para normalizar cadenas de texto.
-* _<mark style="color:blue;">**emoji (versión 1.7.0):**</mark>_ esta librería proporciona herramientas para trabajar específicamente con emojis en Python, como la detección de emojis en cadenas de texto.&#x20;
-* _<mark style="color:blue;">**spellchecker (versión 0.8.1):**</mark>_ permite identificar y corregir errores ortográficos en texto, facilitando la tarea de asegurar la calidad del texto escrito en aplicaciones y procesos de análisis de dat
-
 {% code overflow="wrap" lineNumbers="true" fullWidth="false" %}
 ```python
 import pandas as pd

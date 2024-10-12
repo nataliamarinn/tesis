@@ -1,21 +1,50 @@
 ---
-description: Número de comentarios por red social - nube de palabras - bigramas
+description: >-
+  Número de comentarios por red social - nube de palabras - grafos de
+  co-ocurrencia
+cover: .gitbook/assets/AE.png
+coverY: 0
+layout:
+  cover:
+    visible: true
+    size: hero
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
 ---
 
 # 🔍 Análisis Exploratorio
 
 El _**análisis de datos exploratorio**_ de los comentarios resulta una etapa fundamental en esta investigación, por un lado, proporciona una comprensión inicial de las palabras utilizadas referidas a cada candidato y por otro lado ha sido utilizado para mejorar y ajustar el paso anterior de limpieza de datos.
 
-## <mark style="background-color:blue;">Librerías utilizadas</mark>
+## <mark style="background-color:green;">Librerías utilizadas</mark>
 
-* _<mark style="color:blue;">**pandas:**</mark>_ esta librería fue diseñada para facilitar el análisis y manipulación de datos en forma tabular. Permite cargar datos de diversas fuentes (ej: CSV, Excel, SQL), limpiarlos, filtrar y seleccionar datos, realizar operaciones estadísticas y generar visualizaciones sencillas. Se destaca esta librería por su capacidad de trabajar con grandes volúmenes de datos y su integración con otras librerías de análisis y visualización de datos.
-* _<mark style="color:blue;">**openpyxl:**</mark>_ es una herramienta para trabajar con archivos de Excel en formato .xlsx. Permite leer, escribir y manipular hojas de cálculo.&#x20;
-* _<mark style="color:blue;">**nltk:**</mark>_ por sus siglas en inglés "Natural Language Toolkit"  es una librería muy importante para el procesamiento del lenguaje natural en Python. En esta sección utilizaremos "FreqDist" para calcular frecuencias y "ngrams" para generar n-gramas.
-* <mark style="color:blue;">**nltk.corpus:**</mark> dentro de la librería nltk, "nltk.corpus" es un módulo que proporciona acceso a una variedad de corpus lingüísticos predefinidos. Dentro de esta variedad se encuentra una subcolección llamada _"stopwords"_. Las stopwords son palabras comunes que se eliminan durante el procesamiento de texto en NLP porque generalmente no aportan informacióin relevante para el análisis.
-* _<mark style="color:blue;">**plotly.express:**</mark>_ facilita la creación de gráficos interactivos de alta calidad.
-* _<mark style="color:blue;">**collections:**</mark>_ dentro de esta librería se encuentra una clase llamada "Counter" que se utiliza para contar la frecuencia de de elementos de una colección. Esta librería será útil para conocer la frecuencia de palabras en los comentarios de cada candidato y como paso previo a las visualizaciones que realizaremos.
-* _<mark style="color:blue;">**wordcloud:**</mark>_ esta biblioteca se utiliza para crear visualizaciones de nube de palabras a partir de un conjunto de texto.&#x20;
-* _<mark style="color:blue;">**matplotlib.pyplot:**</mark>_ es una biblioteca muy utilizada para la visualización de datos en Python.
+````python
+import openpyxl # Versión: 3.1.2
+import pandas as pd # Versión: 2.2.1
+from nltk.corpus import stopwords  # Versión: 3.8.1
+import plotly.express as px  # Versión: 5.18.0
+from collections import Counter # Versión:  3.11.5
+from nltk import FreqDist  # Versión: 3.8.1
+from nltk import ngrams # Versión: 3.8.1 
+from wordcloud import WordCloud # Versión: 1.9.2
+import matplotlib.pyplot as plt #Versión: 3.7.3
+import re  # Versión: 2.2.1
+import matplotlib.colors as mcolors # Versión:3.7.3 
+import networkx as nx # Versión 3.1
+import nltk # Versión 3.8.1
+from sklearn.feature_extraction.text import CountVectorizer # Versión 1.3.0
+from scipy.sparse import csr_matrix # Versión 1.11.2
+import numpy as np # Versión 1.25.2
+```
+````
 
 
 
@@ -23,7 +52,7 @@ El _**análisis de datos exploratorio**_ de los comentarios resulta una etapa fu
 
 Utilizaremos los datos obtenidos del apartado anterior de limpieza de datos
 
-{% file src=".gitbook/assets/Datos_filtrados.zip" %}
+{% file src=".gitbook/assets/Datos_limpios_candidatos.zip" %}
 
 ```python
 # Bregman
@@ -44,10 +73,14 @@ df5 = pd.read_excel(file_path5)
 ```
 
 {% hint style="warning" %}
-[**Al tratarse del mismo código para cada candidato, se utilizará como ejemplo el primer data frame df1, que corresponde a la candidata Myriam Bregman. Para realizar las visualizaciones de los restantes candidatos deberá reemplazarse df1 por el correspondiente data frame.**](#user-content-fn-1)[^1]
+Al tratarse del mismo código para cada candidato, se utilizará como ejemplo el primer data frame df1, que corresponde a la candidata Myriam Bregman. Para realizar las visualizaciones de los restantes candidatos deberá reemplazarse df1 por el correspondiente data frame.
 {% endhint %}
 
-## <mark style="color:blue;">Número de comentarios por red social</mark>
+## <mark style="color:blue;">Depuración y reemplazos para visualizaciones</mark>
+
+## <mark style="color:blue;">Visualizaciones</mark>
+
+### <mark style="color:blue;">Número de comentarios por red social</mark>
 
 Para observar con cuántos comentarios se cuenta para cada candidato en las distintas redes sociales, construímos gráficos de columnas. Para cada candidato se debe ejecutar el siguiente código:
 
@@ -151,5 +184,3 @@ plt.show()
 ```
 
 <figure><img src=".gitbook/assets/muestrabi.png" alt=""><figcaption><p>Ejemplo 5 bigramas más frecuentes en comentarios de la candidata Myriam Bregman</p></figcaption></figure>
-
-[^1]: 
