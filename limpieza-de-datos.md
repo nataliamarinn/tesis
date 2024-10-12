@@ -24,7 +24,7 @@ layout:
 
 La **limpieza de datos** es un factor a considerar debido a que al tratarse de comentarios en redes sociales se debe lidiar con la presencia de errores ortográficos, emojis, hipervínculos y menciones a otros usuarios. Estos elementos, si no se manejan adecuadamente, pueden afectar la integridad semántica de los datos y comprometer la validez de los resultados.
 
-## <mark style="background-color:blue;">**Librerías utilizadas**</mark>
+## <mark style="background-color:green;">**Librerías utilizadas**</mark>
 
 {% code overflow="wrap" lineNumbers="true" fullWidth="false" %}
 ```python
@@ -39,7 +39,7 @@ from spellchecker import SpellChecker
 ```
 {% endcode %}
 
-## <mark style="background-color:blue;">Importar archivos de excel</mark>
+## <mark style="background-color:green;">Importar archivos de excel</mark>
 
 Los archivos de Excel de cada candidato se encuentran en el siguiente zip
 
@@ -71,9 +71,9 @@ file_path5 = 'Schiaretti.xlsx'
 df5 = pd.read_excel(file_path5)
 ```
 
-## <mark style="background-color:blue;">Limpieza y filtrado de datos</mark>
+## <mark style="background-color:green;">Limpieza y filtrado de datos</mark>
 
-### <mark style="color:blue;">Eliminación de saltos de línea</mark>&#x20;
+### Eliminación de saltos de línea&#x20;
 
 Se quitan los saltos de línea en los comentarios para eliminar el carácter especial \n
 
@@ -115,7 +115,7 @@ eliminar_saltos(df4)
 eliminar_saltos(df5)
 ```
 
-### <mark style="color:blue;">Reemplazo de hastags (#) y menciones de usuarios</mark>
+### <mark style="color:green;">Reemplazo de hastags (#) y menciones de usuarios</mark>
 
 Se reemplazan los hashtags más utilizados y que aportan un significado relevante al posible sentimiento del comentario. Los hashtags menos frecuentes o que no aportaban un significado relevante al contexto se eliminan.
 
@@ -243,7 +243,7 @@ df4 = reemplazos(df4)
 df5 = reemplazos(df5)
 ```
 
-### <mark style="color:blue;">Eliminación de registros con hipervínculos</mark>
+### <mark style="color:green;">Eliminación de registros con hipervínculos</mark>
 
 Se eliminan aquellos registros que contengan hipervínculos ya que la presencia de un enlace es un fuerte indicador de que el comentario podría dirigir hacia una página web que amplía como noticia lo mostrado en la publicación original. Este tipo de comentarios no expresan ningún tipo de juicio de valor, por lo que se eliminan.
 
@@ -306,7 +306,7 @@ df4 = quitar_enlaces(df4)
 df5 = quitar_enlaces(df5)
 ```
 
-### <mark style="color:blue;">Quitar caracteres especiales</mark>
+### <mark style="color:green;">Quitar caracteres especiales</mark>
 
 Se eliminan caracteres como los signos de puntuación, numerales, astericos, ya que no aportan mucha información semántica y pueden producir ruido en el procesamiento.
 
@@ -354,7 +354,7 @@ df4 = quitar_caracteres(df4)
 df5 = quitar_caracteres(df5)
 ```
 
-### <mark style="color:blue;">Eliminación de emojis</mark>
+### <mark style="color:green;">Eliminación de emojis</mark>
 
 Se eliminan los emojis de los comentarios, ya que los mismos no pueden ser interpretados correctamente por los modelos de clasificación utilizados.
 
@@ -389,7 +389,7 @@ df4['Texto_limpio'] = df4['Texto_limpio'].apply(eliminar_emojis)
 df5['Texto_limpio'] = df5['Texto_limpio'].apply(eliminar_emojis)
 ```
 
-### <mark style="color:blue;">Correción de errores de ortografía</mark>
+### <mark style="color:green;">Correción de errores de ortografía</mark>
 
 Al tratarse de comentarios de redes sociales y no texto técnico, los comentarios contienen muchos errores de ortografía que resultan en un aumento de dimensionalidad. Las herramientas estándar de corrección ortográfica, como la librería de Python pyspellchecker, suelen basarse en diccionarios generales del español que no contemplan las particularidades del castellano argentino ni los nombres propios relevantes para este estudio.
 
@@ -548,7 +548,7 @@ df1, df2, df3, df4, df5 = dataframes
 La aplicación de estas dos funciones puede llevar más tiempo que otras funciones aplicadas previamente debido a que debe evaluar múltiples palabras y muchas filas.
 {% endhint %}
 
-### <mark style="color:blue;">Diccionario de palabras</mark>
+### <mark style="color:green;">Diccionario de palabras</mark>
 
 Se utiliza un diccionario de reemplazos para corregir automáticamente palabras y frases que pueden estar mal escritas o son abreviaciones, transformándolas en sus formas correctas y aceptadas. Sin embargo, es importante destacar que solo se corrigen aquellas instancias donde los nombres propios están mal escritos; las referencias correctas a la misma persona se mantienen intactas.\
 \
@@ -610,7 +610,7 @@ df5['Texto_limpio'] = df5['Texto_limpio'].apply(reemplazar_palabras)
 ```
 ````
 
-### <mark style="color:blue;">Eliminar finalmente los registros vacíos</mark>
+### <mark style="color:green;">Eliminar finalmente los registros vacíos</mark>
 
 Después de la limpieza de datos realizada algunos registros pueden resultar en registros vacíos, los mismos de eliminan ya que no podrán ser procesados en los modelos posteriores.
 
@@ -624,7 +624,7 @@ for i, df in enumerate(dataframes, 1):
     print(f"Registros en df{i} antes: {len(df)}, después: {len(df_cleaned)}")
 ```
 
-### <mark style="color:blue;">Guardar archivos</mark>&#x20;
+### <mark style="background-color:green;">Guardar archivos</mark>&#x20;
 
 Guardamos en Excel los archivos para el siguiente apartado "Análisis Exploratorio". \
 Este paso es totalmente opcional.
