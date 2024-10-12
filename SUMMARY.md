@@ -8,7 +8,7 @@
     * [BERT](conceptos-principales/procesamiento-del-lenguaje-natural/bert.md)
 * [🧹 Limpieza de datos](limpieza-de-datos.md)
 * [🔍 Análisis Exploratorio](analisis-exploratorio.md)
+* [🧪 Evaluación del modelo base](evaluacion-del-modelo-base.md)
 * [🔧 Ajuste Fino](ajuste-fino.md)
-* [💡 Candidatos-BERT y clasificación final](candidatos-bert-y-clasificacion-final.md)
 * [💬 Comentarios](comentarios.md)
 * [Librerías](librerias.md)

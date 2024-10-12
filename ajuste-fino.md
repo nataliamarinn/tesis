@@ -1,16 +1,37 @@
 ---
 description: Ajuste fino del modelo seleccionado
+cover: .gitbook/assets/ajuste_fino.png
+coverY: 0
+layout:
+  cover:
+    visible: true
+    size: hero
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
 ---
 
 # 🔧 Ajuste Fino
 
 El ajuste fino permite adaptar los modelos base a tareas específicas en un dominio de datos en particular. Al complementar estos modelos heredados con texto etiquetado manualmente, se posibilita el aprendizaje y adaptación del modelo a características propias del lenguaje encontradas en el corpus a clasficar.
 
-Se utiliza el conjunto de datos de entrenamiento (_training dataset_) y el conjunto de datos de prueba (_testing dataset_). En primer lugar, se entrena al modelo base elegido en la sección anterior, el **Modelo 1**, con los datos del conjunto de entranamiento. Una vez entrenado dicho modelo se utiliza este nuevo modelo para clasificar los comentarios del conjunto de datos de prueba para luego evaluar la presición de este nuevo modelo.
+Se utiliza el conjunto de datos de entrenamiento (_training dataset_) y el conjunto de datos de prueba (_testing dataset_).&#x20;
 
-### <mark style="background-color:blue;">Librerías utilizadas</mark>
+En primer lugar, se entrena al modelo base con los datos del conjunto de entranamiento. Una vez entrenado dicho modelo se utiliza este nuevo modelo para clasificar los comentarios del conjunto de datos de prueba para luego evaluar la presición de este nuevo modelo.
 
-*
+## <mark style="background-color:green;">Modelo base</mark>
+
+El modelo [**cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual**](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual) es una versión ajustada del modelo **cardiffnlp/twitter-xlm-roberta-base**, específicamente entrenada en el conjunto de datos **cardiffnlp/tweet\_sentiment\_multilingual** mediante la biblioteca **tweetnlp**. Este modelo ha sido diseñado para realizar análisis de sentimientos en múltiples idiomas, logrando métricas destacadas en su evaluación. \
+Este trabajo fue presentado por varios autores en la conferencia EMNLP 2022, destacando su contribución al campo del procesamiento de lenguaje natural y el análisis de sentimientos en redes sociales.
+
+## <mark style="background-color:green;">Librerías utilizadas</mark>
 
 ```python
 import pandas as pd
@@ -23,8 +44,6 @@ from torch.utils.data import Dataset
 {% hint style="info" %}
 En esta etapa el código es el mismo para cada candidato, como ejemplo tomaremos el código para entrenar el modelo del candidato Sergio Massa.&#x20;
 {% endhint %}
-
-
 
 ### <mark style="color:blue;">Creación de la clase "MyDataset"</mark>
 
