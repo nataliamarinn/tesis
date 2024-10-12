@@ -135,13 +135,17 @@ Se crea la función reemplazos()
 ```python
 def reemplazos(df, columna='Texto', columna_limpia='Texto_limpio'):
     """
-    Procesa y limpia el texto en una columna de un DataFrame, reemplazando menciones y hashtags específicos.
+    Procesa y limpia el texto en una columna de un DataFrame, reemplazando menciones
+    y hashtags específicos.
 
     Parámetros: df (pd.DataFrame): DataFrame que contiene la columna a procesar.
-    columna (str): Nombre de la columna que contiene el texto original. Por defecto es 'Texto'.
-    columna_limpia (str): Nombre de la nueva columna donde se almacenará el texto limpio. Por defecto es 'Texto_limpio'.
+    columna (str): Nombre de la columna que contiene el texto original. 
+    Por defecto es 'Texto'.
+    columna_limpia (str): Nombre de la nueva columna donde se almacenará el texto
+    limpio. Por defecto es 'Texto_limpio'.
 
-    Retorna: pd.DataFrame: DataFrame con una nueva columna que contiene el texto procesado, y elimina filas donde el texto procesado es None o está vacío.
+    Retorna: pd.DataFrame: DataFrame con una nueva columna que contiene el texto
+    procesado, y elimina filas donde el texto procesado es None o está vacío.
     """
     
     # Diccionario de reemplazos para menciones y hashtags
@@ -217,13 +221,16 @@ def reemplazos(df, columna='Texto', columna_limpia='Texto_limpio'):
         
         # Reemplazar menciones y hashtags
         for patron, reemplazo in reemplazos_dict.items():
-            texto_limpio = re.sub(re.escape(patron), reemplazo, texto_limpio, flags=re.IGNORECASE)
+            texto_limpio = re.sub(re.escape(patron), reemplazo, texto_limpio, 
+            flags=re.IGNORECASE)
         
         # Verifica si quedan otras menciones o hashtags
         if re.search(r'@\w+|#\w+', texto_limpio):
             return None
         
-        return texto_limpio.strip() if texto_limpio.strip() else None #stip se utiliza para eliminar cualquier espacio blanco y al final de la cadena. Asegura que no haya espacios innecesarios
+        return texto_limpio.strip() if texto_limpio.strip() else None 
+        #stip se utiliza para eliminar cualquier espacio blanco y al final de
+        #la cadena. Asegura que no haya espacios innecesarios
     
     # Crear nueva columna con el texto procesado
     df[columna_limpia] = df[columna].apply(procesar_texto)
@@ -317,16 +324,20 @@ Se define la función quitar\_caracteres()
 ```python
 def quitar_caracteres(df):
     """
-    Función para limpiar un DataFrame eliminando caracteres especiales, no alfanuméricos y hashtags en el texto.
+    Función para limpiar un DataFrame eliminando caracteres especiales, no 
+    alfanuméricos y hashtags en el texto.
 
     Parámetros:
-    - df: DataFrame de pandas. Se espera que contenga una columna llamada 'Texto_limpio'.
+    - df: DataFrame de pandas. Se espera que contenga una columna llamada 
+    'Texto_limpio'.
 
-    La función itera sobre cada fila del DataFrame y elimina caracteres especiales, no alfanuméricos y hashtags
-    en el texto, manteniendo solo caracteres alfanuméricos y espacios.
+    La función itera sobre cada fila del DataFrame y elimina caracteres especiales, 
+    no alfanuméricos y hashtags en el texto, manteniendo solo caracteres 
+    alfanuméricos y espacios.
 
     Retorna:
-    - df: El DataFrame modificado con los caracteres especiales, no alfanuméricos y hashtags eliminados del texto.
+    - df: El DataFrame modificado con los caracteres especiales, no alfanuméricos
+    y hashtags eliminados del texto.
     """
     # Iterar sobre las filas del DataFrame
     for index, row in df.iterrows():
@@ -451,9 +462,10 @@ Se definen las funciones `spellcheck_text` y `clean_and_apply_spellcheck`para co
     Corrige la ortografía de un texto dado.
 
     Esta función toma un texto como entrada y corrige las palabras que no están en 
-    la lista de palabras aceptadas (`nuevas_palabras`). Si una palabra no se encuentra 
-    en la lista, se utiliza un corrector ortográfico para sugerir una corrección. 
-    Las palabras que son nulas, vacías o que no son alfabéticas se mantienen sin cambios.
+    la lista de palabras aceptadas (`nuevas_palabras`). Si una palabra no se 
+    encuentra en la lista, se utiliza un corrector ortográfico para sugerir una 
+    corrección. Las palabras que son nulas, vacías o que no son alfabéticas se
+    mantienen sin cambios.
 
     Parámetros:
     -texto : str (El texto a corregir)
@@ -478,22 +490,26 @@ Se definen las funciones `spellcheck_text` y `clean_and_apply_spellcheck`para co
             if palabra_corregida is not None:
                 palabras_corregidas.append(palabra_corregida)
             else:
-                palabras_corregidas.append(palabra)  # Mantener la palabra original si no hay corrección
+                palabras_corregidas.append(palabra)  # Mantener la palabra original
+                #si no hay corrección
                 
     return ' '.join(palabras_corregidas)
 
 
 def clean_and_apply_spellcheck(df):
     """
-    Limpia el DataFrame y aplica la corrección ortográfica a la columna 'Texto_limpio'.
+    Limpia el DataFrame y aplica la corrección ortográfica a la columna 
+    'Texto_limpio'.
 
-    Esta función verifica si la columna 'Texto_limpio' existe en el DataFrame. Si existe, 
-    elimina las filas con valores nulos o vacíos en esa columna y luego aplica la función 
-    `spellcheck_text` a cada entrada de la columna para corregir su ortografía. Los resultados 
-    se almacenan en una nueva columna llamada 'Texto_corregido'.
+    Esta función verifica si la columna 'Texto_limpio' existe en el DataFrame. 
+    Si existe, elimina las filas con valores nulos o vacíos en esa columna y luego 
+    aplica la función `spellcheck_text` a cada entrada de la columna para corregir
+    su ortografía. Los resultados se almacenan en una nueva columna llamada 
+    'Texto_corregido'.
 
     Parámetros:
-    -df : pandas.DataFrame (contiene la columna 'Texto_limpio' que se desea limpiar y corregir)
+    -df : pandas.DataFrame (contiene la columna 'Texto_limpio' que se desea limpiar
+    y corregir)
 
     Retorna:
     -pandas.DataFrame (DataFrame original con una nueva columna 'Texto_corregido')
@@ -517,7 +533,7 @@ def clean_and_apply_spellcheck(df):
 Aplicamos la función clean\_and\_apply\_spellcheck() a los dataframe de cada candidato
 
 ````
-# lista de dataframes a los que vamos a aplicar la función  clean_and_apply_spellcheck
+# lista de dataframes a los que vamos a aplicar la función clean_and_apply_spellcheck
 dataframes = [df1, df2, df3, df4, df5]
 
 # Aplicar la limpieza y corrección ortográfica a cada DataFrame
@@ -559,12 +575,13 @@ def reemplazar_palabras(texto):
     -str (El texto con las palabras reemplazadas según el diccionario definido)
     """
 
-    # Verifica si el texto es nulo o no es una cadena, y devuelve el valor original si es así.
+    # Verifica si el texto es nulo o no es una cadena, y devuelve el valor original 
+    #si es así.
     if pd.isna(texto) or not isinstance(texto, str):
         return texto
 
-    # Diccionario de reemplazos donde las claves son tuplas de variantes a ser reemplazadas
-    # y los valores son las palabras o frases por las que se reemplazarán.
+    # Diccionario de reemplazos donde las claves son tuplas de variantes a ser 
+    #reemplazadas y los valores son las palabras/frases por las que se reemplazarán.
     reemplazos = {
         ('miloski', 'mileli', 'miley'): 'milei',
         ('masa', 'masita'): 'massa',
@@ -579,7 +596,8 @@ def reemplazar_palabras(texto):
 
     # Itera sobre cada grupo de variantes y su correspondiente reemplazo.
     for variantes, reemplazo in reemplazos.items():
-        # Crea un patrón de expresión regular que coincide con cualquiera de las variantes.
+        # Crea un patrón de expresión regular que coincide con cualquiera de las 
+        #variantes.
         patron = r'\b(' + '|'.join(re.escape(v) for v in variantes) + r')\b'
         
         # Reemplaza las variantes encontradas en el texto con el término estándar.
@@ -609,7 +627,8 @@ Después de la limpieza de datos realizada algunos registros pueden resultar en 
 dataframes = [df1, df2, df3, df4, df5]
 
 for i, df in enumerate(dataframes, 1):
-    df_cleaned = df[df['Texto_limpio'].notna() & (df['Texto_limpio'] != ' ')& (df['Texto_limpio'] != '  ')]
+    df_cleaned = df[df['Texto_limpio'].notna() & (df['Texto_limpio'] != ' ')& 
+    (df['Texto_limpio'] != '  ')]
     globals()[f'df{i}'] = df_cleaned
     print(f"Registros en df{i} antes: {len(df)}, después: {len(df_cleaned)}")
 ```
