@@ -9,6 +9,7 @@
 * [🧹 Limpieza de datos](limpieza-de-datos.md)
 * [🔍 Análisis Exploratorio](analisis-exploratorio.md)
 * [🧪 Evaluación del modelo base](evaluacion-del-modelo-base.md)
-* [🔧 Ajuste Fino](ajuste-fino.md)
+* [⚙️ Ajuste fino](ajuste-fino.md)
+* [✅ Resultados](resultados.md)
 * [💬 Comentarios](comentarios.md)
 * [Librerías](librerias.md)

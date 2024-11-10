@@ -1,215 +1,246 @@
----
-description: Ajuste fino del modelo seleccionado
-cover: .gitbook/assets/ajuste_fino.png
-coverY: 0
-layout:
-  cover:
-    visible: true
-    size: hero
-  title:
-    visible: true
-  description:
-    visible: true
-  tableOfContents:
-    visible: true
-  outline:
-    visible: true
-  pagination:
-    visible: true
----
+# ⚙️ Ajuste fino
 
-# 🔧 Ajuste Fino
 
-El ajuste fino permite adaptar los modelos base a tareas específicas en un dominio de datos en particular. Al complementar estos modelos heredados con texto etiquetado manualmente, se posibilita el aprendizaje y adaptación del modelo a características propias del lenguaje encontradas en el corpus a clasficar.
 
-Se utiliza el conjunto de datos de entrenamiento (_training dataset_) y el conjunto de datos de prueba (_testing dataset_).&#x20;
+## Librerías
 
-En primer lugar, se entrena al modelo base con los datos del conjunto de entranamiento. Una vez entrenado dicho modelo se utiliza este nuevo modelo para clasificar los comentarios del conjunto de datos de prueba para luego evaluar la presición de este nuevo modelo.
-
-## <mark style="background-color:green;">Modelo base</mark>
-
-El modelo [**cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual**](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual) es una versión ajustada del modelo **cardiffnlp/twitter-xlm-roberta-base**, específicamente entrenada en el conjunto de datos **cardiffnlp/tweet\_sentiment\_multilingual** mediante la biblioteca **tweetnlp**. Este modelo ha sido diseñado para realizar análisis de sentimientos en múltiples idiomas, logrando métricas destacadas en su evaluación. \
-Este trabajo fue presentado por varios autores en la conferencia EMNLP 2022, destacando su contribución al campo del procesamiento de lenguaje natural y el análisis de sentimientos en redes sociales.
-
-## <mark style="background-color:green;">Librerías utilizadas</mark>
-
+````python
 ```python
 import pandas as pd
+from tqdm import notebook as notebook_tqdm
 from sklearn.model_selection import train_test_split
-from transformers import XLMRobertaForSequenceClassification, XLMRobertaTokenizer,AutoTokenizer,AutoModelForSequenceClassification,TrainingArguments,Trainer
+from transformers import (
+    XLMRobertaForSequenceClassification,
+    XLMRobertaTokenizer,
+    AutoTokenizer,
+    AutoModelForSequenceClassification,
+    TrainingArguments,
+    Trainer
+)
 import torch
-from torch.utils.data import Dataset 
+import openpyxl
+from nltk.tokenize import word_tokenize
+from datasets import Dataset
+from sklearn.metrics import (
+    accuracy_score, 
+    precision_recall_fscore_support, 
+    confusion_matrix,
+    roc_auc_score,
+    cohen_kappa_score,
+    matthews_corrcoef
+)
+import psutil
+import numpy as np
+from tabulate import tabulate
+
 ```
+````
 
-{% hint style="info" %}
-En esta etapa el código es el mismo para cada candidato, como ejemplo tomaremos el código para entrenar el modelo del candidato Sergio Massa.&#x20;
-{% endhint %}
+## Cargar datos
 
-### <mark style="color:blue;">Creación de la clase "MyDataset"</mark>
+{% file src=".gitbook/assets/datos_etiquetados.zip" %}
 
-La clase 'Mydataset' que hereda de Dataset una clase de Pytorch para trabajar con datos personalizados. Necesitamos convertir los datos etiquetados para la entrada del modelo para su entrenamiento.
-
+````
 ```python
-# Define el dataset con los datos etiquetados
-class MyDataset(Dataset):
-    def __init__(self, dataframe, tokenizer, max_length=512, num_labels=3):
-        """
-        Inicializa el dataset con los datos etiquetados.
-
-        Argumentos:
-            dataframe (DataFrame): DataFrame que contiene los datos etiquetados.
-            tokenizer (Tokenizer): para convertir texto a tokens.
-            max_length (int): Longitud máxima de secuencia permitida por el tokenizer (máximo de tokens)
-            num_labels (int): Número de etiquetas en el conjunto de datos. (en este caso tenemos 3 etiquetas:negativo-neutro-positivo)
-        """
-        self.tokenizer = tokenizer
-        self.data = [] #dataset vacío
-        for idx, row in dataframe.iterrows():
-            text = str(row['Texto_corregido'])
-            label = int(row['tag_hf1'])  # Convertir la etiqueta a entero
-            # Codificar el texto utilizando el tokenizador
-            encoding = tokenizer(text, truncation=True, padding='max_length', max_length=max_length) #padding(relleno) se realiza para homogenizar longitudes y simplificar el procesamiento y la eficiencia computacional
-            # Convertir la etiqueta a one-hot encoding: es una forma de respresentar las categorías como vectores binarios. 
-            one_hot_label = torch.zeros(num_labels)
-            one_hot_label[label] = 1
-            # Agregar los datos codificados al dataset
-            self.data.append({'input_ids': encoding['input_ids'], #input_ids se refiere a los IDs de los tokens en la secuencia de texto (estos IDs son los que entiende el modelo)
-                              'attention_mask': encoding['attention_mask'], #es una máscara que indica qué partes de la secuencia son importantes para el modelo y cuáles corresponden al padding
-                              'labels': one_hot_label}) #representa las etiquetas de clasificación codificadas en el formato one-hot
-            
-    def __len__(self):
-        return len(self.data)
-    
-    def __getitem__(self, idx):
-        return {key: val for key, val in self.data[idx].items()}
+df = pd.read_excel('massa_etiquetas.xlsx')
+df_filtrado = df[df['tag'].notna()]
+df_filtrado = df_filtrado[['Fuente', 'Texto_corregido', 'tag']]
 ```
+````
 
-### <mark style="color:blue;">Carga de datos</mark>
-
-{% file src=".gitbook/assets/Datos con etiquetas.zip" %}
-
+````python
 ```python
-file_path1 = 'Massa_30.xlsx'
-df1 = pd.read_excel(file_path1)
-df_filtrado1= df1.dropna(subset=['tag_hf1'])
-columnas_seleccionadas = ['Fuente', 'Texto_corregido', 'tag_hf1']
-df11= df_filtrado1[columnas_seleccionadas]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=94)
 ```
+````
 
-<pre class="language-python"><code class="lang-python"># Dividir el DataFrame en conjunto de entrenamiento y pruebas
-df1_training, df1_testing = train_test_split(df11, test_size=0.2, random_state=42)
-
-<strong># Imprimir la forma de los nuevos DataFrames
-</strong>print("Shape de df1_training:", df1_training.shape)
-print("Shape de df1_testing:", df1_testing.shape)
-</code></pre>
-
+````
 ```python
-# Cargar el modelo base y su tokenizador
+train_df = pd.concat([X_train, y_train], axis=1)
+test_df = pd.concat([X_test, y_test], axis=1)
+```
+````
+
+## Cargar el modelo base
+
+````python
+```python
 model_path = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 model = XLMRobertaForSequenceClassification.from_pretrained(model_path)
 tokenizer = XLMRobertaTokenizer.from_pretrained(model_path)
 ```
+````
+
+## Preparar el entrenamiento y cálculo de métricas
+
+````python
+```python
+columnas_seleccionadas = ['Fuente', 'Texto_corregido', 'tag']
+test_df= test_df[columnas_seleccionadas]
+train_df= train_df[columnas_seleccionadas]
+```
+````
 
 ```python
-# Crear instancia del dataset para entrenamiento
-train_dataset = MyDataset(df1_training, tokenizer)
+def tokenize_and_encode_labels(examples):
+    tokenized = tokenizer(examples["Texto_corregido"], padding="max_length", truncation=True, max_length=512)
+    tokenized["labels"] = [int(label) for label in examples["tag"]]
+    return tokenized
 ```
 
+````python
 ```python
-# Entrenar un modelo nuevo para Myriam Bregman
+# Convierte el dataframe en una clase Dataset de Hugging Face
+train_dataset = Dataset.from_pandas(train_df)
+test_dataset = Dataset.from_pandas(test_df)
+
+# Aplica la función de tokenización y codificación de etiquetas
+train_dataset = train_dataset.map(tokenize_and_encode_labels, batched=True)
+test_dataset = test_dataset.map(tokenize_and_encode_labels, batched=True)
+```
+````
+
+````python
+```python
+split_dataset = {
+    "train": train_dataset,  # Cambia 'tokenized_train_dataset' por 'train_dataset'
+    "test": test_dataset     # Cambia 'tokenized_test_dataset' por 'test_dataset'
+}
+```
+````
+
+````python
+```python
 training_args = TrainingArguments(
-    output_dir='./results',  # directorio de salida
-    num_train_epochs=3,  # número de epochs
-    per_device_train_batch_size=8,  # tamaño de lote por dispositivo de entrenamiento
-    logging_dir='./logs',  # directorio de logs
+    output_dir="./results",
+    num_train_epochs=2,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=8,
+    warmup_steps=50,
+    weight_decay=0.01,
+    logging_dir="./logs",
+    logging_steps=10,
+    evaluation_strategy="epoch",
+    save_strategy="epoch",
+    load_best_model_at_end=True,
+    save_total_limit=1,  # Mantener solo el mejor modelo
+    fp16=False,
 )
 
 ```
+````
 
+````python
 ```python
-# Definir el entrenamiento
-trainer = Trainer(
-    model=model,  # modelo base
-    args=training_args,  # argumentos de entrenamiento
-    train_dataset=train_dataset,  # dataset de entrenamiento
-)
+def compute_metrics(pred):
+    labels = pred.label_ids
+    preds = pred.predictions.argmax(-1)
+    
+    # Métricas generales
+    precision, recall, f1, _ = precision_recall_fscore_support(labels, preds, average='weighted')
+    acc = accuracy_score(labels, preds)
+    
+    # Métricas por clase
+    precision_per_class, recall_per_class, f1_per_class, support_per_class = \
+        precision_recall_fscore_support(labels, preds, average=None)
+    
+    # Matriz de confusión
+    cm = confusion_matrix(labels, preds)
+    
+    return {
+        'accuracy': acc,
+        'f1': f1,
+        'precision': precision,
+        'recall': recall,
+        'precision_per_class': precision_per_class.tolist(),
+        'recall_per_class': recall_per_class.tolist(),
+        'f1_per_class': f1_per_class.tolist(),
+        'support_per_class': support_per_class.tolist(),
+        'confusion_matrix': cm.tolist()
+    }
 ```
+````
 
+## Entrenamiento y evaluación
+
+````python
+```python
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=split_dataset["train"],
+    eval_dataset=split_dataset["test"],
+    compute_metrics=compute_metrics,
+)
+
+```
+````
+
+````python
 ```python
 # Entrenar el modelo
 trainer.train()
 ```
+````
 
-{% hint style="warning" %}
-Esta sentencia puede tomar mucho tiempo en su ejecución, a diferencia de los códigos anteriores.&#x20;
-{% endhint %}
-
+````
 ```python
-# Guardar el modelo entrenado
-trainer.save_model("modelomassabert")
+# Especifica el directorio donde quieres guardar el modelo
+model_dir = "./sentimientos-massa"
+
+# Guarda el modelo y el tokenizador
+model.save_pretrained(model_dir)
+tokenizer.save_pretrained(model_dir)
 ```
+````
 
-{% hint style="info" %}
-Es recomendable guardar el modelo debido al tiempo de ejecución que toma la sentencia, de esta manera, se puede utilizar el modelo en las próximas sentencias sin requerir del tiempo de ejecución que demanda el código anterior.
-{% endhint %}
-
+````python
 ```python
-# Cargar el modelo entrenado
-model_path = "modelomassabert"  # Ruta donde guardaste el modelo "massabert"
-model = XLMRobertaForSequenceClassification.from_pretrained(model_path)
+results = trainer.evaluate()
+print(results)
 ```
+````
 
+````python
 ```python
-#Utilizamos el modelo nuevo para clasificar el dataset de prueba
-# Crear una lista para almacenar los resultados
-sentimientos= []
-
-# Iterar a través de las filas del DataFrame y realizar el análisis de sentimientos
-for _, row in df1_testing.iterrows():
-    # Tomar el texto de la columna 'Texto_corregido'
-    text = str(row['Texto_corregido'])  # Convertir a cadena
+def visualize_metrics(results):
+    # Métricas generales
+    general_metrics = [
+        ["Accuracy", results['eval_accuracy']],
+        ["F1 Score", results['eval_f1']],
+        ["Precision", results['eval_precision']],
+        ["Recall", results['eval_recall']]
+    ]
     
-    # Tokenizar y clasificar el texto
-    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
-    outputs = model(**inputs)
-    logits = outputs.logits
-    predicted_class = torch.argmax(logits, dim=1)
-    sentimientos.append(predicted_class.item())
+    print("Métricas Generales:")
+    print(tabulate(general_metrics, headers=["Métrica", "Valor"], tablefmt="grid"))
+    print("\n")
 
-# Agregar la columna "sentimiento" al DataFrame original
-df1_testing['sentimiento'] = sentimientos
+    # Métricas por clase
+    class_metrics = []
+    for i in range(len(results['eval_precision_per_class'])):
+        class_metrics.append([
+            f"Clase {i}",
+            results['eval_precision_per_class'][i],
+            results['eval_recall_per_class'][i],
+            results['eval_f1_per_class'][i],
+            results['eval_support_per_class'][i]
+        ])
+    
+    print("Métricas por Clase:")
+    print(tabulate(class_metrics, headers=["Clase", "Precision", "Recall", "F1", "Support"], tablefmt="grid"))
+    print("\n")
 
-# Imprimir el DataFrame resultante
-print(df1_testing)
+    # Matriz de confusión
+    cm = np.array(results['eval_confusion_matrix'])
+    print("Matriz de Confusión:")
+    print(tabulate(cm, headers=range(cm.shape[1]), showindex="always", tablefmt="grid"))
 ```
+````
 
+````python
 ```python
-# Calcular coincidencias y errores
-coincidencias = (df1_testing['tag_hf1'] == df1_testing['sentimiento']).sum()
-errores = (df1_testing['tag_hf1'] != df1_testing['sentimiento']).sum()
-
-# Crear tabla cruzada
-tabla_cruzada = pd.crosstab(df1_testing['tag_hf1'], df1_testing['sentimiento'])
-
-# Mostrar resultados
-print("Tabla Cruzada de Coincidencias:")
-print(tabla_cruzada)
-
-# Crear DataFrame con los resultados
-resultados = pd.DataFrame({'Coincidencias': [coincidencias], 'Errores': [errores]})
-
-# Mostrar los resultados
-print("\nResultados:")
-print(resultados)
+visualize_metrics(results)
 ```
-
-
-
-### Comparación del modelo previo y posterior al ajuste fino
-
-Al ejecutar los entrenamientos para todos los candidatos, los resultados obtenidos fueron los siguientes:
-
-<figure><img src=".gitbook/assets/Tabla_14.png" alt=""><figcaption></figcaption></figure>
-
-En todas las ocasiones, el modelo posterior al ajuste fino obtiene una mejor precisión en la clasificación de comentarios, particularmente en la detección de comentarios positivos. En el caso de Javier Milei, ocurre que el modelo posterior al ajuste fino es menos preciso que el modelo previo a su entrenamiento, sin embargo, la precisión global es mayor para el modelo ajustado. Para todos los modelos se observa que la precisión a la hora de detectar comentarios con sentimientos neutros es nula, aunque debe resaltarse que la cantidad de comentarios neutros utilizados para el entrenamiento también era de baja frecuencia.
+````
