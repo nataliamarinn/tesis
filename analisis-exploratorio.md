@@ -227,7 +227,14 @@ plt.show()
 
 ### <mark style="color:blue;">Grafos de co-ocurrencia</mark>
 
-Los **grafos de co-ocurrencia** permiten visualizar las relaciones entre palabras basándose en la frecuencia con las que aparecen juntas dentro de un corpus definido, en este caso, los comentarios sobre cada candidato en las distintas plataformas de redes sociales- La construcción de estos grafos implica la identificación de pares de palabras que co-ocurren dentro de una ventana definida (un comentario), luego se calcula la frecuencia de co-ocurrencia de cada par de palabras en el total de comentarios disponibles. La visualización de estas relaciones forma un grafo, donde las palabras son los nodos y las conexiones entre ellas, arcos, representan su co-ocurrencia mediante el grosor de las líneas indicando la fuerza de asociación.
+Los **grafos de co-ocurrencia** permiten visualizar las relaciones entre palabras basándose en la frecuencia con las que aparecen juntas dentro de un corpus definido, en este caso, los comentarios sobre cada candidato en las distintas plataformas de redes sociales
+
+La asociación entre palabras se calculó a través de una matriz de correlaciones, en primer lugar se transforma la matriz de frecuencias en una matriz booleana, donde 1 indica la presencia de una palabra en un comentario. Esta matriz booleana permite evaluar la frecuencia relativa con la que cada par de palabras co-ocurre en el corpus. A partir de esta matriz, la correlación entre dos palabras se obtiene dividiendo el número de co-ocurrencias entre la raíz del producto de sus ocurrencias individuales. Este cálculo ofrece un valor normalizado entre  y 1 que refleja el grado de asociación entre palabras.
+
+Los nodos en los grafos representan una palabra, y el tamaño de estos es proporcional a su frecuencia en el corpus, destacando visualmente las palabras más comunes. Además, los grafos están construídos para mostrar aquellas palabras que tienen una cierta correlación entre sí, de acuerdo al umbral mínimo definido en cada caso. Esto permite que la visualización resalte no sólo las palabras más frecuentes, sino también aquellas que mantienen una asociación en términos de co-ocurrencia. El grosor e intensidad del color de los arcos representan la magnitud de esta asociación.
+
+\
+
 
 Se define la función crear\_grafo()
 
