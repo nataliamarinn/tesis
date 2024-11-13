@@ -2,6 +2,25 @@
 description: >-
   Métricas de desempeño del modelo base en un conjunto de datos etiquetados
   manualmente
+cover: >-
+  .gitbook/assets/DALL·E 2024-11-12 22.05.40 - A hand-drawn style illustration
+  in green tones representing the process of testing a language model. The image
+  features a computer surrounded by icons.webp
+coverY: 0
+layout:
+  cover:
+    visible: true
+    size: hero
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
 ---
 
 # 🧪 Evaluación del modelo base

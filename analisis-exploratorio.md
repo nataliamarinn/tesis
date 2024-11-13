@@ -2,7 +2,10 @@
 description: >-
   Número de comentarios por red social - nube de palabras - grafos de
   co-ocurrencia
-cover: .gitbook/assets/AE.png
+cover: >-
+  .gitbook/assets/DALL·E 2024-11-12 22.06.32 - A hand-drawn style illustration
+  in green tones representing data visualization. The image features a computer
+  surrounded by icons like bar charts, pie.webp
 coverY: 0
 layout:
   cover:

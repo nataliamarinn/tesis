@@ -1,3 +1,25 @@
+---
+cover: >-
+  .gitbook/assets/DALL·E 2024-11-12 22.04.57 - A hand-drawn style illustration
+  in green tones symbolizing the process of fine-tuning a language model. The
+  image features a computer with surrounding.webp
+coverY: 0
+layout:
+  cover:
+    visible: true
+    size: hero
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
+---
+
 # ⚙️ Ajuste fino
 
 

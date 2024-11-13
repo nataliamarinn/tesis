@@ -2,8 +2,11 @@
 description: >-
   eliminación de saltos de líneas - reemplazos -  eliminación de emojis - quita
   de hipervínculos - corrreción de ortografía - quita de caracteres especiales
-cover: .gitbook/assets/DAtaclean.png
-coverY: 17
+cover: >-
+  .gitbook/assets/DALL·E 2024-11-12 22.06.06 - A hand-drawn style illustration
+  in green tones representing the process of cleaning data. The image features a
+  computer surrounded by icons like broom.webp
+coverY: 0
 layout:
   cover:
     visible: true

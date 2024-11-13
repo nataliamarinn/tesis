@@ -1,2 +1,0 @@
-# 📚 Conceptos Principales
-

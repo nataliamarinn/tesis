@@ -2,7 +2,7 @@
 description: Descripción de las librerías utilizadas
 ---
 
-# Librerías
+# 📑 Librerías
 
 * _<mark style="color:blue;">**pandas (versión 2.2.1):**</mark>_ esta librería fue diseñada para facilitar el análisis y manipulación de datos en forma tabular. Permite cargar datos de diversas fuentes (ej: CSV, Excel, SQL), limpiarlos, filtrar y seleccionar datos, realizar operaciones estadísticas y generar visualizaciones sencillas. Se destaca esta librería por su capacidad de trabajar con grandes volúmenes de datos y su integración con otras librerías de análisis y visualización de datos.
 * _<mark style="color:blue;">**openpyxl (versión 3.1.2) :**</mark>_ es una herramienta para trabajar con archivos de Excel en formato .xlsx. Permite leer, escribir y manipular hojas de cálculo.&#x20;
