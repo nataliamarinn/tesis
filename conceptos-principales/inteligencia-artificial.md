@@ -1,6 +1,0 @@
----
-hidden: true
----
-
-# 🧠 Inteligencia Artificial
-

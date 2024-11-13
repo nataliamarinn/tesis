@@ -2,8 +2,8 @@
 description: >-
   eliminación de saltos de líneas - reemplazos -  eliminación de emojis - quita
   de hipervínculos - corrreción de ortografía - quita de caracteres especiales
-cover: .gitbook/assets/Limpieza_imagen.png
-coverY: 0
+cover: .gitbook/assets/DAtaclean.png
+coverY: 17
 layout:
   cover:
     visible: true

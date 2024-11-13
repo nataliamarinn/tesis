@@ -1,2 +1,0 @@
-# 🗣️ Procesamiento del Lenguaje Natural
-
