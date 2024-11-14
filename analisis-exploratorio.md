@@ -30,21 +30,21 @@ El _**análisis de datos exploratorio**_ de los comentarios resulta una etapa fu
 ## <mark style="background-color:green;">Librerías utilizadas</mark>
 
 ```python
-import openpyxl # Versión: 3.1.2
-import pandas as pd # Versión: 2.2.1
-from nltk.corpus import stopwords  # Versión: 3.8.1
-import plotly.express as px  # Versión: 5.18.0
-from collections import Counter # Versión:  3.11.5
-from nltk import FreqDist  # Versión: 3.8.1
-from wordcloud import WordCloud # Versión: 1.9.2
-import matplotlib.pyplot as plt #Versión: 3.7.3
-import re  # Versión: 2.2.1
-import matplotlib.colors as mcolors # Versión:3.7.3 
-import networkx as nx # Versión 3.1
-import nltk # Versión 3.8.1
-from sklearn.feature_extraction.text import CountVectorizer # Versión 1.3.0
-from scipy.sparse import csr_matrix # Versión 1.11.2
-import numpy as np # Versión 1.25.2
+import openpyxl 
+import pandas as pd 
+from nltk.corpus import stopwords 
+import plotly.express as px  
+from collections import Counter 
+from nltk import FreqDist 
+from wordcloud import WordCloud 
+import matplotlib.pyplot as plt 
+import re 
+import matplotlib.colors as mcolors 
+import networkx as nx
+import nltk
+from sklearn.feature_extraction.text import CountVectorizer 
+from scipy.sparse import csr_matrix 
+import numpy as np 
 ```
 
 ### <mark style="background-color:green;">Carga de datos</mark>

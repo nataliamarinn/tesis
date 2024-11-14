@@ -29,7 +29,6 @@ En la sección anterior se evaluó el desempeño del modelo base, en esta secci�
 
 ```python
 import pandas as pd
-from tqdm import notebook as notebook_tqdm
 from sklearn.model_selection import train_test_split
 from transformers import (
     XLMRobertaForSequenceClassification,
