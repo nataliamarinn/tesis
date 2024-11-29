@@ -123,79 +123,66 @@ Se define la función `evaluate_model` para calcular métricas de evaluación pa
 ```python
 def evaluate_model(y_true, y_pred):
     """
-    Calcula varias métricas de evaluación para un modelo de clasificación.
+    Calcula métricas de evaluación para un modelo de clasificación.
 
     Parámetros:
     y_true : array-like
-        Etiquetas verdaderas (reales) del conjunto de datos.
+        Etiquetas verdaderas.
     y_pred : array-like
         Etiquetas predichas por el modelo.
 
     Retorna:
-    dict : Un diccionario que contiene las métricas calculadas:
-        - 'accuracy': Exactitud general del modelo.
+    dict : Un diccionario con las métricas calculadas:
+        - 'accuracy': Exactitud general.
         - 'precision_weighted': Precisión ponderada por clase.
         - 'recall_weighted': Sensibilidad ponderada por clase.
         - 'f1_score_weighted': Puntaje F1 ponderado por clase.
-        - 'precision_per_class': Precisión por clase (array).
-        - 'recall_per_class': Sensibilidad por clase (array).
-        - 'f1_per_class': Puntaje F1 por clase (array).
-        - 'confusion_matrix': Matriz de confusión (2D array).
-        - 'specificity_per_class': Especificidad por clase (array).
-        - 'ppv_per_class': Valor predictivo positivo (PPV) por clase (array).
-        - 'npv_per_class': Valor predictivo negativo (NPV) por clase (array).
+        - 'precision_per_class': Precisión por clase.
+        - 'recall_per_class': Sensibilidad por clase.
+        - 'f1_per_class': Puntaje F1 por clase.
+        - 'confusion_matrix': Matriz de confusión.
+        - 'specificity_per_class': Especificidad por clase.
+        - 'npv_per_class': Valor predictivo negativo por clase.
     """
 
-    # Calcular exactitud
+    # Calcular métricas globales (exactitud, precisión, recall, F1 ponderados)
     accuracy = accuracy_score(y_true, y_pred)
-    
-    # Calcular precisión, sensibilidad y puntaje F1 ponderado para todas las clases
     precision, recall, f1, _ = precision_recall_fscore_support(y_true, y_pred, average='weighted')
-    
-    # Calcular precisión, sensibilidad y puntaje F1 específico para cada clase
-    per_class_metrics = precision_recall_fscore_support(y_true, y_pred, average=None)
-    precision_per_class, recall_per_class, f1_per_class = per_class_metrics[:3]
-    
+
+    # Calcular métricas específicas por clase
+    precision_per_class, recall_per_class, f1_per_class, _ = precision_recall_fscore_support(y_true, y_pred, average=None)
+
     # Generar la matriz de confusión
     cm = confusion_matrix(y_true, y_pred)
-    
-    # Preparar los datos para el cálculo de AUC multiclase (si se desea implementar AUC)
-    lb = LabelBinarizer()
-    y_true_bin = lb.fit_transform(y_true)
-    y_pred_bin = lb.transform(y_pred)
-    
-    # Calcular especificidad (negativos verdaderos / (negativos verdaderos + falsos positivos)) para cada clase
-    specificity_per_class = []
+
+    # Calcular especificidad y valor predictivo negativo (NPV) por clase
+    specificity_per_class, npv_per_class = [], []
     for i in range(len(cm)):
-        tn = cm.sum() - (cm[i, :].sum() + cm[:, i].sum() - cm[i, i])  # Negativos verdaderos
+        tn = cm.sum() - (cm[i, :].sum() + cm[:, i].sum() - cm[i, i])  # Verdaderos negativos
         fp = cm[:, i].sum() - cm[i, i]  # Falsos positivos
+        fn = cm[i, :].sum() - cm[i, i]  # Falsos negativos
+        
+        # Especificidad (TN / (TN + FP))
         specificity = tn / (tn + fp) if (tn + fp) != 0 else 0
         specificity_per_class.append(specificity)
-    
-    # El valor predictivo positivo (PPV) para cada clase es igual a la precisión de cada clase
-    ppv_per_class = precision_per_class
-    
-    # Calcular el valor predictivo negativo (NPV) para cada clase
-    npv_per_class = []
-    for i in range(len(cm)):
-        tn = cm.sum() - (cm[i, :].sum() + cm[:, i].sum() - cm[i, i])  # Negativos verdaderos
-        fn = cm[i, :].sum() - cm[i, i]  # Falsos negativos
+        
+        # Valor predictivo negativo (NPV = TN / (TN + FN))
         npv = tn / (tn + fn) if (tn + fn) != 0 else 0
         npv_per_class.append(npv)
 
     return {
-        'accuracy': accuracy,  # Exactitud global del modelo
-        'precision_weighted': precision,  # Precisión ponderada (considera la proporción de cada clase)
-        'recall_weighted': recall,  # Sensibilidad ponderada (considera la proporción de cada clase)
-        'f1_score_weighted': f1,  # Puntaje F1 ponderado (balancea precisión y sensibilidad)
-        'precision_per_class': precision_per_class,  # Precisión para cada clase
-        'recall_per_class': recall_per_class,  # Sensibilidad para cada clase
-        'f1_per_class': f1_per_class,  # Puntaje F1 para cada clase
-        'confusion_matrix': cm,  # Matriz de confusión para visualizar los aciertos y errores por clase
-        'specificity_per_class': specificity_per_class,  # Especificidad para cada clase (falsos positivos controlados)
-        'ppv_per_class': ppv_per_class,  # Valor predictivo positivo para cada clase (igual a precisión por clase)
-        'npv_per_class': npv_per_class  # Valor predictivo negativo para cada clase (probabilidad de no tener la clase cuando no se predice)
+        'accuracy': accuracy,
+        'precision_weighted': precision,
+        'recall_weighted': recall,
+        'f1_score_weighted': f1,
+        'precision_per_class': precision_per_class,
+        'recall_per_class': recall_per_class,
+        'f1_per_class': f1_per_class,
+        'confusion_matrix': cm,
+        'specificity_per_class': specificity_per_class,
+        'npv_per_class': npv_per_class
     }
+
 ```
 
 Utilizamos las etiquetas reales (`y_true`) y las predicciones del modelo (`y_pred`) del conjunto de prueba (`test_df`) para evaluar el desempeño del modelo. La función `evaluate_model` se llama con estas dos series de datos, y el resultado, almacenado en `metrics`, contiene el conjunto completo de métricas de evaluación.
