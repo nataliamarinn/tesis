@@ -1,10 +1,5 @@
 ---
 description: Introducción - objetivos - material adicional
-cover: >-
-  ../.gitbook/assets/DALL·E 2024-11-12 22.09.09 - A minimalist hand-drawn style
-  illustration in green tones representing a debate between political candidates
-  on stage with people commenting on social.webp
-coverY: 113.90933333333332
 layout:
   cover:
     visible: true
