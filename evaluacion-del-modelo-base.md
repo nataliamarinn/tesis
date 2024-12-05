@@ -201,9 +201,3 @@ for metric, value in metrics.items():
     else:
         print(f"{metric}:\n{value}")
 ```
-
-## Métricas de desempeño modelo base
-
-A continuación se presentan las métricas de desempeño del modelo base para cada candidato.
-
-<figure><img src=".gitbook/assets/tabla_basew.png" alt=""><figcaption></figcaption></figure>

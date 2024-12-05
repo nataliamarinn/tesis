@@ -275,8 +275,4 @@ def visualize_metrics(results):
 visualize_metrics(results)
 ```
 
-## <mark style="background-color:green;">Modelo base vs modelos ajustados</mark>
-
-A continuación se presentan las métricas de desempeño del modelo base versus los modelos para cada candidato.&#x20;
-
 <figure><img src=".gitbook/assets/basevsajustado.png" alt=""><figcaption></figcaption></figure>
